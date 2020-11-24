@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:todoapp/widgets/custom_icon_decoration.dart';
+import '../widgets/custom_icon_decoration.dart';
 
 class EventPage extends StatefulWidget {
   @override
@@ -16,12 +16,12 @@ class Event {
 }
 
 final List<Event> _eventList = [
-  new Event("08:00", "Have coffe with Sam", "Personal", true),
-  new Event("10:00", "Meet with sales", "Work", true),
-  new Event("12:00", "Call Tom about appointment", "Work", false),
-  new Event("14:00", "Fix onboarding experience", "Work", false),
-  new Event("16:00", "Edit API documentation", "Personal", false),
-  new Event("18:00", "Setup user focus group", "Personal", false),
+  new Event("08:00", "Send mail to professor", "Personal", true),
+  new Event("10:00", "Meeting with Council", "Work", true),
+  new Event("12:00", "Call for project meeting", "Work", true),
+  new Event("14:00", "Discussion with team on GMeet", "Work", false),
+  new Event("16:00", "Clear documentation", "Personal", false),
+  new Event("18:00", "Meet Jenny", "Personal", false),
 ];
 
 class _EventPageState extends State<EventPage> {
@@ -109,7 +109,7 @@ class _EventPageState extends State<EventPage> {
                   ? Icons.fiber_manual_record
                   : Icons.radio_button_unchecked,
               size: iconSize,
-              color: Theme.of(context).accentColor),
+              color: Colors.deepPurple),
         ));
   }
 }

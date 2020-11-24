@@ -1,5 +1,12 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
 part of 'database.dart';
 
+// **************************************************************************
+// MoorGenerator
+// **************************************************************************
+
+// ignore_for_file: unnecessary_brace_in_string_interps
 class TodoData extends DataClass implements Insertable<TodoData> {
   final int id;
   final DateTime date;

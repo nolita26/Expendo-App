@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:todoapp/model/database.dart';
-import 'package:todoapp/model/todo.dart';
-import 'package:todoapp/widgets/custom_date_time_picker.dart';
-import 'package:todoapp/widgets/custom_modal_action_button.dart';
-import 'package:todoapp/widgets/custom_textfield.dart';
+import '../model/database.dart';
+import '../model/todo.dart';
+import '../widgets/custom_date_time_picker.dart';
+import '../widgets/custom_modal_action_button.dart';
+import '../widgets/custom_textfield.dart';
 
 class AddTaskPage extends StatefulWidget {
   @override
@@ -14,7 +14,7 @@ class AddTaskPage extends StatefulWidget {
 
 class _AddTaskPageState extends State<AddTaskPage> {
   DateTime _selectedDate = DateTime.now();
-  final _textTaskControler = TextEditingController();
+  final _textTaskController = TextEditingController();
 
   Future _pickDate() async {
     DateTime datepick = await showDatePicker(
@@ -32,7 +32,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
   Widget build(BuildContext context) {
     var provider = Provider.of<Database>(context);
 
-    _textTaskControler.clear();
+    _textTaskController.clear();
     return Padding(
       padding: const EdgeInsets.all(24.0),
       child: Column(
@@ -43,11 +43,9 @@ class _AddTaskPageState extends State<AddTaskPage> {
             "Add new task",
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           )),
-          SizedBox(
-            height: 24,
-          ),
+          SizedBox(height: 24),
           CustomTextField(
-              labelText: 'Enter task name', controller: _textTaskControler),
+              labelText: 'Enter task name', controller: _textTaskController),
           SizedBox(height: 12),
           CustomDateTimePicker(
             icon: Icons.date_range,
@@ -62,7 +60,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
               Navigator.of(context).pop();
             },
             onSave: () {
-              if (_textTaskControler.text == "") {
+              if (_textTaskController.text == "") {
                 print("data not found");
               } else {
                 provider
@@ -70,7 +68,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                         date: _selectedDate,
                         time: DateTime.now(),
                         isFinish: false,
-                        task: _textTaskControler.text,
+                        task: _textTaskController.text,
                         description: "",
                         todoType: TodoType.TYPE_TASK.index,
                         id: null))

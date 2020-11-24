@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:todoapp/model/database.dart';
-import 'package:todoapp/model/todo.dart';
-import 'package:todoapp/widgets/custom_button.dart';
+import '../model/database.dart';
+import '../model/todo.dart';
+import '../widgets/custom_button.dart';
 
 class TaskPage extends StatefulWidget {
   @override

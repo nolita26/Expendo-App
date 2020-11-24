@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:todoapp/widgets/custom_date_time_picker.dart';
-import 'package:todoapp/widgets/custom_modal_action_button.dart';
-import 'package:todoapp/widgets/custom_textfield.dart';
+import '../widgets/custom_date_time_picker.dart';
+import '../widgets/custom_modal_action_button.dart';
+import '../widgets/custom_textfield.dart';
 
 class AddEventPage extends StatefulWidget {
   @override
@@ -36,43 +36,45 @@ class _AddEventPageState extends State<AddEventPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(24.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Center(
-              child: Text(
-            "Add new event",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-          )),
-          SizedBox(
-            height: 24,
-          ),
-          CustomTextField(labelText: 'Enter event name'),
-          SizedBox(height: 12),
-          CustomTextField(labelText: 'Enter description'),
-          SizedBox(height: 12),
-          CustomDateTimePicker(
-            icon: Icons.date_range,
-            onPressed: _pickDate,
-            value: _selectedDate,
-          ),
-          CustomDateTimePicker(
-            icon: Icons.access_time,
-            onPressed: _pickTime,
-            value: _selectedTime,
-          ),
-          SizedBox(
-            height: 24,
-          ),
-          CustomModalActionButton(
-            onClose: () {
-              Navigator.of(context).pop();
-            },
-            onSave: () {},
-          )
-        ],
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Center(
+                child: Text(
+              "Add new event",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            )),
+            SizedBox(
+              height: 24,
+            ),
+            CustomTextField(labelText: 'Enter event name'),
+            SizedBox(height: 12),
+            CustomTextField(labelText: 'Enter description'),
+            SizedBox(height: 12),
+            CustomDateTimePicker(
+              icon: Icons.date_range,
+              onPressed: _pickDate,
+              value: _selectedDate,
+            ),
+            CustomDateTimePicker(
+              icon: Icons.access_time,
+              onPressed: _pickTime,
+              value: _selectedTime,
+            ),
+            SizedBox(
+              height: 24,
+            ),
+            CustomModalActionButton(
+              onClose: () {
+                Navigator.of(context).pop();
+              },
+              onSave: () {},
+            )
+          ],
+        ),
       ),
     );
   }

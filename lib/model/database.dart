@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:moor_flutter/moor_flutter.dart';
-import 'package:todoapp/model/todo.dart';
+import '../model/todo.dart';
 
 part 'database.g.dart';
 

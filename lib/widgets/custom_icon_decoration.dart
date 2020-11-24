@@ -42,7 +42,7 @@ class IconLine extends BoxPainter {
         this.firstData = firstData,
         this.lastData = lastData,
         paintLine = Paint()
-          ..color = Colors.red
+          ..color = Colors.purple
           ..strokeCap = StrokeCap.round
           ..strokeWidth = lineWidth
           ..style = PaintingStyle.stroke;
