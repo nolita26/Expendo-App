@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import '../model/database.dart';
+// import '../model/database.dart';
 import '../model/todo.dart';
 import '../widgets/custom_date_time_picker.dart';
 import '../widgets/custom_modal_action_button.dart';
@@ -30,7 +30,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
 
   @override
   Widget build(BuildContext context) {
-    var provider = Provider.of<Database>(context);
+    // var provider = Provider.of<Database>(context);
 
     _textTaskController.clear();
     return Padding(
@@ -63,16 +63,17 @@ class _AddTaskPageState extends State<AddTaskPage> {
               if (_textTaskController.text == "") {
                 print("data not found");
               } else {
-                provider
-                    .insertTodoEntries(new TodoData(
-                        date: _selectedDate,
-                        time: DateTime.now(),
-                        isFinish: false,
-                        task: _textTaskController.text,
-                        description: "",
-                        todoType: TodoType.TYPE_TASK.index,
-                        id: null))
-                    .whenComplete(() => Navigator.of(context).pop());
+                // provider
+                //     .insertTodoEntries(new TodoData(
+                //         date: _selectedDate,
+                //         time: DateTime.now(),
+                //         isFinish: false,
+                //         task: _textTaskController.text,
+                //         description: "",
+                //         todoType: TodoType.TYPE_TASK.index,
+                //         id: null))
+                //     .whenComplete(() => Navigator.of(context).pop());
+
               }
             },
           )

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:todoapp/widgets/new_event.dart';
 import '../widgets/custom_icon_decoration.dart';
 
 class EventPage extends StatefulWidget {
@@ -7,44 +9,92 @@ class EventPage extends StatefulWidget {
 }
 
 class Event {
-  final String time;
+  // final String time;
+  final TimeOfDay time;
   final String task;
   final String desc;
-  final bool isFinish;
+  bool isFinish;
+  final DateTime date;
 
-  const Event(this.time, this.task, this.desc, this.isFinish);
+  Event({this.time, this.task, this.desc, this.isFinish, this.date});
 }
 
-final List<Event> _eventList = [
-  new Event("08:00", "Send mail to professor", "Personal", true),
-  new Event("10:00", "Meeting with Council", "Work", true),
-  new Event("12:00", "Call for project meeting", "Work", true),
-  new Event("14:00", "Discussion with team on GMeet", "Work", false),
-  new Event("16:00", "Clear documentation", "Personal", false),
-  new Event("18:00", "Meet Jenny", "Personal", false),
-];
-
 class _EventPageState extends State<EventPage> {
+  final List<Event> _eventList = [
+    Event(
+      time: TimeOfDay.now(),
+      desc: "This is a dummy event",
+      isFinish: false,
+      task: "Dummy event",
+      date: DateTime.now(),
+    ),
+  ];
+
+  void addNewEvent(DateTime date, String task, String desc, TimeOfDay time) {
+    setState(() {
+      _eventList.add(
+        Event(
+          time: time,
+          desc: desc,
+          isFinish: false,
+          task: task,
+          date: date,
+        ),
+      );
+    });
+  }
+
+  void _startAddNewEvent(BuildContext ctx) {
+    showModalBottomSheet(
+        context: ctx,
+        builder: (_) {
+          return GestureDetector(
+            onTap: () {},
+            child: NewEvent(addNewEvent),
+            behavior: HitTestBehavior.opaque,
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     double iconSize = 20;
 
-    return ListView.builder(
-      itemCount: _eventList.length,
-      padding: const EdgeInsets.all(0),
-      itemBuilder: (context, index) {
-        return Padding(
-          padding: const EdgeInsets.only(left: 24.0, right: 24),
-          child: Row(
-            children: <Widget>[
-              _lineStyle(context, iconSize, index, _eventList.length,
-                  _eventList[index].isFinish),
-              _displayTime(_eventList[index].time),
-              _displayContent(_eventList[index])
-            ],
-          ),
-        );
-      },
+    return Scaffold(
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.deepPurple,
+        onPressed: () {
+          _startAddNewEvent(context);
+          // showDialog(
+          //     barrierDismissible: false,
+          //     context: context,
+          //     builder: (BuildContext context) {
+          //       return Dialog(
+          //           child: currentPage == 0 ? AddTaskPage() : AddEventPage(),
+          //           shape: RoundedRectangleBorder(
+          //               borderRadius: BorderRadius.all(Radius.circular(12))));
+          //     });
+        },
+        child: Icon(Icons.add),
+      ),
+      body: ListView.builder(
+        itemCount: _eventList.length,
+        padding: const EdgeInsets.all(0),
+        itemBuilder: (context, index) {
+          return Padding(
+            padding: const EdgeInsets.only(left: 24.0, right: 24),
+            child: Row(
+              children: <Widget>[
+                _lineStyle(context, iconSize, index, _eventList.length,
+                    _eventList[index].isFinish),
+                _displayTime(_eventList[index].time),
+                _displayContent(_eventList[index])
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 
@@ -78,12 +128,12 @@ class _EventPageState extends State<EventPage> {
     );
   }
 
-  Widget _displayTime(String time) {
+  Widget _displayTime(TimeOfDay time) {
     return Container(
         width: 80,
         child: Padding(
           padding: const EdgeInsets.only(left: 8.0),
-          child: Text(time),
+          child: Text(time.toString()),
         ));
   }
 

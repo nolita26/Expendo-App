@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:splashscreen/splashscreen.dart';
 import 'package:todoapp/pages/get_started.dart';
-import './model/database.dart';
+// import './model/database.dart';
 import './pages/add_event_page.dart';
 import './pages/add_task_page.dart';
 import './pages/event_page.dart';
@@ -15,42 +15,39 @@ void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
+
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [ChangeNotifierProvider<Database>(create: (_) => Database())],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Expendo',
-        theme: ThemeData(
-          primarySwatch: Colors.deepPurple,
-          accentColor: Colors.deepPurpleAccent,
-          errorColor: Colors.purple,
-          fontFamily: 'Montserrat-Regular',
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Expendo',
+      theme: ThemeData(
+        primarySwatch: Colors.deepPurple,
+        accentColor: Colors.deepPurpleAccent,
+        errorColor: Colors.purple,
+        fontFamily: 'Montserrat-Regular',
+        textTheme: ThemeData.light().textTheme.copyWith(
+              headline6: TextStyle(
+                  fontFamily: 'Montserrat-Regular',
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18.0),
+              button: TextStyle(color: Colors.white),
+            ),
+        appBarTheme: AppBarTheme(
           textTheme: ThemeData.light().textTheme.copyWith(
                 headline6: TextStyle(
-                    fontFamily: 'Montserrat-Regular',
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18.0),
-                button: TextStyle(color: Colors.white),
-              ),
-          appBarTheme: AppBarTheme(
-            textTheme: ThemeData.light().textTheme.copyWith(
-                  headline6: TextStyle(
-                    fontFamily: 'Montserrat-Regular',
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  fontFamily: 'Montserrat-Regular',
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
                 ),
-          ),
+              ),
         ),
-        home: new Splash(),
-        initialRoute: "/",
-        routes: {
-
-          ExpensesPage.routeName: (ctx) => ExpensesPage(),
-        },
       ),
+      home: new Splash(),
+      initialRoute: "/",
+      routes: {
+        ExpensesPage.routeName: (ctx) => ExpensesPage(),
+      },
     );
   }
 }
@@ -85,45 +82,36 @@ class _MyHomePageState extends State<MyHomePage> {
           Positioned(
             right: 0,
             child: Text(
-              "",
+              DateTime.now().day.toString(),
               style: TextStyle(fontSize: 200, color: Color(0x10000000)),
             ),
           ),
           _mainContent(context),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.deepPurple,
-        onPressed: () {
-          showDialog(
-              barrierDismissible: false,
-              context: context,
-              builder: (BuildContext context) {
-                return Dialog(
-                    child: currentPage == 0 ? AddTaskPage() : AddEventPage(),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(12))));
-              });
-        },
-        child: Icon(Icons.add),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: BottomAppBar(
-        shape: CircularNotchedRectangle(),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            IconButton(
-              icon: Icon(Icons.settings),
-              onPressed: () {},
-            ),
-            IconButton(
-              icon: Icon(Icons.more_vert),
-              onPressed: () {},
-            )
-          ],
-        ),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   backgroundColor: Colors.deepPurple,
+      //   onPressed: () {
+      //     showDialog(
+      //         barrierDismissible: false,
+      //         context: context,
+      //         builder: (BuildContext context) {
+      //           return Dialog(
+      //               child: currentPage == 0 ? AddTaskPage() : AddEventPage(),
+      //               shape: RoundedRectangleBorder(
+      //                   borderRadius: BorderRadius.all(Radius.circular(12))));
+      //         });
+      //   },
+      //   child: Icon(Icons.add),
+      // ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      // bottomNavigationBar: BottomAppBar(
+      //   shape: CircularNotchedRectangle(),
+      //   child: Row(
+      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //     children: <Widget>[],
+      //   ),
+      // ),
       // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
@@ -211,13 +199,13 @@ class _SplashState extends State<Splash> {
   Widget build(BuildContext context) {
     return Center(
         child: SplashScreen(
-        seconds: 5,
-        backgroundColor: Colors.white,
-        image: Image.asset('images/logo.png'),
-        loaderColor: Colors.black,
-        photoSize: 120.0,
-        navigateAfterSeconds: new GetStarted(),
-        routeName: "/",
+      seconds: 5,
+      backgroundColor: Colors.white,
+      image: Image.asset('images/logo.png'),
+      loaderColor: Colors.black,
+      photoSize: 120.0,
+      navigateAfterSeconds: new GetStarted(),
+      routeName: "/",
     ));
   }
 }
