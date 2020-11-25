@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-
+import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:todoapp/widgets/new_event.dart';
 import '../widgets/custom_icon_decoration.dart';
@@ -13,25 +13,23 @@ class EventPage extends StatefulWidget {
 
 class Event {
   // final String time;
-  final String time;
+  // final String time;
   final String task;
   final String desc;
   bool isFinish;
   final DateTime date;
 
-  Event({this.time, this.task, this.desc, this.isFinish, this.date});
+  Event({this.task, this.desc, this.isFinish, this.date});
 }
 
 class _EventPageState extends State<EventPage> {
   List<Event> _eventList = [];
 
-  Future<void> addNewEvent(
-      DateTime date, String task, String desc, TimeOfDay time) async {
+  Future<void> addNewEvent(DateTime date, String task, String desc) async {
     const url = 'https://expendo-5dd9e.firebaseio.com/events.json';
     try {
       final response = await http.post(url,
           body: json.encode({
-            'time': time.toString(),
             'desc': desc,
             'isFinish': false,
             'task': task,
@@ -41,7 +39,6 @@ class _EventPageState extends State<EventPage> {
       setState(() {
         _eventList.add(
           Event(
-            time: time.toString(),
             desc: desc,
             isFinish: false,
             task: task,
@@ -60,14 +57,17 @@ class _EventPageState extends State<EventPage> {
     try {
       final response = await http.get(url);
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
+      if (extractedData == null) {
+        return;
+      }
       final List<Event> loadedEvent = [];
       extractedData.forEach((eventId, event) {
         loadedEvent.add(Event(
-            date: DateTime.fromMicrosecondsSinceEpoch(event['date']),
-            desc: event['desc'],
-            isFinish: event['isFinish'],
-            task: event['task'],
-            time: event['time']));
+          date: DateTime.fromMicrosecondsSinceEpoch(event['date']),
+          desc: event['desc'],
+          isFinish: event['isFinish'],
+          task: event['task'],
+        ));
       });
 
       setState(() {
@@ -143,7 +143,7 @@ class _EventPageState extends State<EventPage> {
                       child: Column(
                         children: <Widget>[
                           Text(
-                            'No todos added yet!',
+                            'No events added yet!',
                             style: Theme.of(context).textTheme.headline6,
                           ),
                           SizedBox(
@@ -169,7 +169,9 @@ class _EventPageState extends State<EventPage> {
                           children: <Widget>[
                             _lineStyle(context, iconSize, index,
                                 _eventList.length, _eventList[index].isFinish),
-                            _displayTime(_eventList[index].time),
+                            _displayDate(DateFormat("dd-MM-yyyy")
+                                .format(_eventList[index].date)
+                                .toString()),
                             _displayContent(_eventList[index])
                           ],
                         ),
@@ -210,12 +212,13 @@ class _EventPageState extends State<EventPage> {
     );
   }
 
-  Widget _displayTime(String time) {
+  Widget _displayDate(String date) {
     return Container(
         width: 80,
+        margin: EdgeInsets.only(right: 10.0),
         child: Padding(
           padding: const EdgeInsets.only(left: 8.0),
-          child: Text(time.toString()),
+          child: Text(date),
         ));
   }
 

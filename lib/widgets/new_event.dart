@@ -12,24 +12,21 @@ class _NewEventState extends State<NewEvent> {
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
   DateTime _selectedDate = DateTime.now();
-  TimeOfDay _selectedTime = TimeOfDay.now();
+  // TimeOfDay _selectedTime = TimeOfDay.now();
   var _isLoading = false;
 
   Future<void> _submitData() async {
     final _enteredTitle = _titleController.text;
     final _enteredDesc = _descriptionController.text;
 
-    if (_enteredTitle.isEmpty ||
-        _selectedDate == null ||
-        _selectedTime == null) {
+    if (_enteredTitle.isEmpty || _selectedDate == null) {
       return;
     }
     setState(() {
       _isLoading = true;
     });
     try {
-      await widget.addEventFunc(
-          _selectedDate, _enteredTitle, _enteredDesc, _selectedTime);
+      await widget.addEventFunc(_selectedDate, _enteredTitle, _enteredDesc);
     } catch (error) {
       await showDialog<Null>(
           context: context,
@@ -69,21 +66,21 @@ class _NewEventState extends State<NewEvent> {
     });
   }
 
-  void _presentTimePicker() {
-    showTimePicker(context: context, initialTime: _selectedTime)
-        .then((pickedTime) {
-      if (pickedTime == null) {
-        return;
-      }
-      setState(() {
-        _selectedTime = pickedTime;
-      });
-    });
-  }
+  // void _presentTimePicker() {
+  //   showTimePicker(context: context, initialTime: _selectedTime)
+  //       .then((pickedTime) {
+  //     if (pickedTime == null) {
+  //       return;
+  //     }
+  //     setState(() {
+  //       _selectedTime = pickedTime;
+  //     });
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
-    final localization = MaterialLocalizations.of(context);
+    // final localization = MaterialLocalizations.of(context);
     return _isLoading
         ? Center(
             child: CircularProgressIndicator(),
@@ -131,26 +128,26 @@ class _NewEventState extends State<NewEvent> {
                               )
                             ],
                           ),
-                          Row(
-                            children: <Widget>[
-                              Expanded(
-                                child: Text(_selectedTime == null
-                                    ? 'No time chosen'
-                                    : 'Picked time: ' +
-                                        localization
-                                            .formatTimeOfDay(_selectedTime)
-                                            .toString()),
-                              ),
-                              FlatButton(
-                                textColor: Theme.of(context).primaryColor,
-                                child: Text(
-                                  'Choose time',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                                onPressed: _presentTimePicker,
-                              )
-                            ],
-                          ),
+                          // Row(
+                          //   children: <Widget>[
+                          //     Expanded(
+                          //       child: Text(_selectedTime == null
+                          //           ? 'No time chosen'
+                          //           : 'Picked time: ' +
+                          //               localization
+                          //                   .formatTimeOfDay(_selectedTime)
+                          //                   .toString()),
+                          //     ),
+                          //     FlatButton(
+                          //       textColor: Theme.of(context).primaryColor,
+                          //       child: Text(
+                          //         'Choose time',
+                          //         style: TextStyle(fontWeight: FontWeight.bold),
+                          //       ),
+                          //       onPressed: _presentTimePicker,
+                          //     )
+                          //   ],
+                          // ),
                         ],
                       ),
                     ),

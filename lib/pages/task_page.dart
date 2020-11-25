@@ -62,6 +62,9 @@ class TaskPageState extends State<TaskPage> {
     try {
       final response = await http.get(url);
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
+      if (extractedData == null) {
+        return;
+      }
       final List<Todo> loadedTodo = [];
       extractedData.forEach((todoId, todo) {
         loadedTodo.add(

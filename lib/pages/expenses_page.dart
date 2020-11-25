@@ -53,6 +53,9 @@ class _ExpensesPageState extends State<ExpensesPage> {
     try {
       final response = await http.get(url);
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
+      if (extractedData == null) {
+        return;
+      }
       final List<Transaction> loadedTransaction = [];
       extractedData.forEach((transactionId, transaction) {
         loadedTransaction.add(Transaction(
