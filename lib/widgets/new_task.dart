@@ -12,17 +12,41 @@ class NewTask extends StatefulWidget {
 class _NewTaskState extends State<NewTask> {
   final _titleController = TextEditingController();
   DateTime _selectedDate;
+  var _isLoading = false;
 
-  void _submitData() {
+  Future<void> _submitData() async {
     final _enteredTitle = _titleController.text;
 
     if (_enteredTitle.isEmpty || _selectedDate == null) {
       return;
     }
 
-    widget.addTaskFunc(_selectedDate, _enteredTitle);
-
-    Navigator.of(context).pop();
+    setState(() {
+      _isLoading = true;
+    });
+    try {
+      await widget.addTaskFunc(_selectedDate, _enteredTitle);
+    } catch (error) {
+      await showDialog<Null>(
+          context: context,
+          builder: (ctx) => AlertDialog(
+                title: Text('An Error Occure'),
+                content: Text('Something went wrong'),
+                actions: [
+                  FlatButton(
+                    onPressed: () {
+                      Navigator.of(ctx).pop();
+                    },
+                    child: Text('Okay'),
+                  )
+                ],
+              ));
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+      Navigator.of(context).pop();
+    }
   }
 
   void _presentDatePicker() {
@@ -43,53 +67,57 @@ class _NewTaskState extends State<NewTask> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Card(
-        elevation: 5,
-        child: Container(
-          padding: EdgeInsets.only(
-              top: 10,
-              left: 10,
-              right: 10,
-              bottom: MediaQuery.of(context).viewInsets.bottom + 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: <Widget>[
-              TextField(
-                decoration: InputDecoration(labelText: 'Title'),
-                controller: _titleController,
-                onSubmitted: (_) => _submitData(),
-              ),
-              Container(
-                height: 100.0,
-                child: Row(
+    return _isLoading
+        ? Center(
+            child: CircularProgressIndicator(),
+          )
+        : SingleChildScrollView(
+            child: Card(
+              elevation: 5,
+              child: Container(
+                padding: EdgeInsets.only(
+                    top: 10,
+                    left: 10,
+                    right: 10,
+                    bottom: MediaQuery.of(context).viewInsets.bottom + 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: <Widget>[
-                    Expanded(
-                      child: Text(_selectedDate == null
-                          ? 'No date chosen'
-                          : 'Picked Date: ${DateFormat.yMd().format(_selectedDate)}'),
+                    TextField(
+                      decoration: InputDecoration(labelText: 'Title'),
+                      controller: _titleController,
+                      onSubmitted: (_) => _submitData(),
                     ),
-                    FlatButton(
-                      textColor: Theme.of(context).primaryColor,
-                      child: Text(
-                        'Choose date',
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                    Container(
+                      height: 100.0,
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: Text(_selectedDate == null
+                                ? 'No date chosen'
+                                : 'Picked Date: ${DateFormat.yMd().format(_selectedDate)}'),
+                          ),
+                          FlatButton(
+                            textColor: Theme.of(context).primaryColor,
+                            child: Text(
+                              'Choose date',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            onPressed: _presentDatePicker,
+                          )
+                        ],
                       ),
-                      onPressed: _presentDatePicker,
+                    ),
+                    RaisedButton(
+                      child: Text('Add Task'),
+                      onPressed: _submitData,
+                      textColor: Theme.of(context).textTheme.button.color,
+                      color: Theme.of(context).primaryColor,
                     )
                   ],
                 ),
               ),
-              RaisedButton(
-                child: Text('Add Task'),
-                onPressed: _submitData,
-                textColor: Theme.of(context).textTheme.button.color,
-                color: Theme.of(context).primaryColor,
-              )
-            ],
-          ),
-        ),
-      ),
-    );
+            ),
+          );
   }
 }

@@ -12,7 +12,6 @@ class GetStartedScreen extends StatelessWidget {
       routes: <String, WidgetBuilder>{
         '/task': (BuildContext context) => TaskPage(),
         '/myhomepage': (BuildContext context) => MyHomePage(),
-        // '/options': (BuildContext context) => new Options(),
       },
       home: GetStarted(),
     );
@@ -32,17 +31,15 @@ class _GetStartedState extends State<GetStarted> {
     SliderPage(
         title: "Welcome to Expendo",
         description:
-        "We help you take care of everything you do and accomplish them!",
+            "We help you take care of everything you do and accomplish them!",
         image: "images/11.jpg"),
     SliderPage(
         title: "Two-in-One Features",
-        description:
-        "Add task as well as expenses to keep you up to date",
+        description: "Add task as well as expenses to keep you up to date",
         image: "images/12.png"),
     SliderPage(
         title: "Friendly Reminders",
-        description:
-        "Reminders of completing the task and modified expenses",
+        description: "Reminders of completing the task and modified expenses",
         image: "images/13.jpeg"),
   ];
 
@@ -77,7 +74,7 @@ class _GetStartedState extends State<GetStarted> {
                         height: 10,
                         width: (index == _currentPage) ? 30 : 10,
                         margin:
-                        EdgeInsets.symmetric(horizontal: 5, vertical: 30),
+                            EdgeInsets.symmetric(horizontal: 5, vertical: 30),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(5),
                             color: (index == _currentPage)
@@ -100,28 +97,30 @@ class _GetStartedState extends State<GetStarted> {
                       borderRadius: BorderRadius.circular(35)),
                   child: (_currentPage == (_pages.length - 1))
                       ? GestureDetector(
-                    onTap: () {
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => MyHomePage()));
-                    },
-                    child: Text(
-                      "Get Started",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                      ),
-                    ),
-                  )
+                          onTap: () {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => MyHomePage()));
+                          },
+                          child: Text(
+                            "Get Started",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                            ),
+                          ),
+                        )
                       : Icon(
-                    Icons.navigate_next,
-                    size: 50,
-                    color: Colors.white,
-                  ),
+                          Icons.navigate_next,
+                          size: 50,
+                          color: Colors.white,
+                        ),
                 ),
               ),
-              SizedBox(height: 20,)
+              SizedBox(
+                height: 20,
+              )
             ],
           ),
         ],

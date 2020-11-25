@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'package:todoapp/widgets/new_task.dart';
-// import 'package:provider/provider.dart';
-// import '../model/database.dart';
+
 import '../model/todo.dart';
 import '../widgets/custom_button.dart';
+import 'dart:async';
 
 class TaskPage extends StatefulWidget {
   @override
@@ -12,29 +14,35 @@ class TaskPage extends StatefulWidget {
 }
 
 class TaskPageState extends State<TaskPage> {
-  final List<Todo> todos = [
-    Todo(
-      date: DateTime.now(),
-      description: "This is a task",
-      id: DateTime.now().toString(),
-      isFinish: false,
-      task: "Dummy Task",
-      time: DateTime.now(),
-      todoType: TodoType.TYPE_TASK.index,
-    )
-  ];
+  List<Todo> todos = [];
 
-  void addNewTodo(DateTime date, String task) {
-    setState(() {
-      todos.add(Todo(
-          date: date,
-          description: "",
-          id: DateTime.now().toString(),
-          isFinish: false,
-          task: task,
-          time: DateTime.now(),
-          todoType: TodoType.TYPE_TASK.index));
-    });
+  Future<void> addNewTodo(DateTime date, String task) async {
+    const url = 'https://expendo-5dd9e.firebaseio.com/tasks.json';
+    try {
+      final response = await http.post(url,
+          body: json.encode({
+            'date': date.microsecondsSinceEpoch,
+            'description': "",
+            'isFinish': false,
+            'task': task,
+            'time': DateTime.now().microsecondsSinceEpoch,
+            'todoType': TodoType.TYPE_TASK.index
+          }));
+
+      setState(() {
+        todos.add(Todo(
+            date: date,
+            description: "",
+            id: json.decode(response.body)['name'],
+            isFinish: false,
+            task: task,
+            time: DateTime.now(),
+            todoType: TodoType.TYPE_TASK.index));
+      });
+    } catch (error) {
+      print(error);
+      throw error;
+    }
   }
 
   void _startAddNewTask(BuildContext ctx) {
@@ -49,6 +57,90 @@ class TaskPageState extends State<TaskPage> {
         });
   }
 
+  Future<void> fetchAndSetTasks() async {
+    const url = 'https://expendo-5dd9e.firebaseio.com/tasks.json';
+    try {
+      final response = await http.get(url);
+      final extractedData = json.decode(response.body) as Map<String, dynamic>;
+      final List<Todo> loadedTodo = [];
+      extractedData.forEach((todoId, todo) {
+        loadedTodo.add(
+          Todo(
+              id: todoId,
+              date: DateTime.fromMicrosecondsSinceEpoch(todo['date']),
+              time: DateTime.fromMicrosecondsSinceEpoch(todo['time']),
+              task: todo['task'],
+              description: todo['description'],
+              isFinish: todo['isFinish'],
+              todoType: todo['todoType']),
+        );
+      });
+      setState(() {
+        todos = loadedTodo;
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<void> updateTodo(String id, Todo newTodo) async {
+    final url = 'https://expendo-5dd9e.firebaseio.com/tasks/$id.json';
+    await http.patch(
+      url,
+      body: json.encode({
+        'date': newTodo.date.microsecondsSinceEpoch,
+        'description': newTodo.description,
+        'isFinish': true,
+        'task': newTodo.task,
+        'time': newTodo.time.microsecondsSinceEpoch,
+        'todoType': newTodo.todoType
+      }),
+    );
+  }
+
+  Future<void> deleteTodo(String id) async {
+    final url = 'https://expendo-5dd9e.firebaseio.com/tasks/$id.json';
+    final existingTodoIndex = todos.indexWhere((element) => element.id == id);
+    var existingTodo = todos[existingTodoIndex];
+    setState(() {
+      todos.removeAt(existingTodoIndex);
+    });
+    http.delete(url).then((_) => existingTodo = null).catchError((_) {
+      setState(() {
+        todos.insert(existingTodoIndex, existingTodo);
+      });
+    });
+  }
+
+  Future<void> _refreshTasks() async {
+    await fetchAndSetTasks();
+  }
+
+  var _isInit = true;
+  var _isLoading = false;
+
+  @override
+  void initState() {
+    // fetchAndSetTasks();
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (_isInit) {
+      setState(() {
+        _isLoading = true;
+      });
+      fetchAndSetTasks().then((_) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
+    }
+    _isInit = false;
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
     // provider = Provider.of<Database>(context);
@@ -59,70 +151,49 @@ class TaskPageState extends State<TaskPage> {
         backgroundColor: Colors.deepPurple,
         onPressed: () {
           _startAddNewTask(context);
-          // showDialog(
-          //     barrierDismissible: false,
-          //     context: context,
-          //     builder: (BuildContext context) {
-          //       return Dialog(
-          //           child: currentPage == 0 ? AddTaskPage() : AddEventPage(),
-          //           shape: RoundedRectangleBorder(
-          //               borderRadius: BorderRadius.all(Radius.circular(12))));
-          //     });
         },
         child: Icon(Icons.add),
       ),
-      body: todos.isEmpty
-          ? LayoutBuilder(builder: (ctx, constraints) {
-              return Column(
-                children: <Widget>[
-                  Text(
-                    'No todos added yet!',
-                    style: Theme.of(context).textTheme.headline6,
+      body: RefreshIndicator(
+        onRefresh: _refreshTasks,
+        child: _isLoading
+            ? Center(
+                child: CircularProgressIndicator(),
+              )
+            : todos.isEmpty
+                ? LayoutBuilder(builder: (ctx, constraints) {
+                    return Center(
+                      child: Column(
+                        children: <Widget>[
+                          Text(
+                            'No todos added yet!',
+                            style: Theme.of(context).textTheme.headline6,
+                          ),
+                          SizedBox(
+                            height: 20.0,
+                          ),
+                          Container(
+                              height: constraints.maxHeight * 0.6,
+                              child: Image.asset(
+                                'assets/image/waiting.png',
+                                fit: BoxFit.cover,
+                              ))
+                        ],
+                      ),
+                    );
+                  })
+                : ListView.builder(
+                    padding: const EdgeInsets.all(0),
+                    itemBuilder: (ctx, index) {
+                      return todos[index].isFinish
+                          ? _taskComplete(todos[index], index)
+                          : _taskUncomplete(todos[index], index);
+                    },
+                    itemCount: todos.length,
                   ),
-                  SizedBox(
-                    height: 20.0,
-                  ),
-                  Container(
-                      height: constraints.maxHeight * 0.6,
-                      child: Image.asset(
-                        'assets/image/waiting.png',
-                        fit: BoxFit.cover,
-                      ))
-                ],
-              );
-            })
-          : ListView.builder(
-              padding: const EdgeInsets.all(0),
-              itemBuilder: (ctx, index) {
-                return todos[index].isFinish
-                    ? _taskComplete(todos[index], index)
-                    : _taskUncomplete(todos[index], index);
-              },
-              itemCount: todos.length,
-            ),
+      ),
     );
   }
-
-  // StreamProvider<List<TodoData>> buildStreamProviderFunction() {
-  //   return StreamProvider.value(
-  //     value: provider.getTodoByType(TodoType.TYPE_TASK.index),
-  //     child: Consumer<List<TodoData>>(
-  //       builder: (context, _dataList, child) {
-  //         return _dataList == null
-  //             ? Center(child: CircularProgressIndicator())
-  //             : ListView.builder(
-  //                 padding: const EdgeInsets.all(0),
-  //                 itemCount: _dataList.length,
-  //                 itemBuilder: (context, index) {
-  //                   return _dataList[index].isFinish
-  //                       ? _taskComplete(_dataList[index])
-  //                       : _taskUncomplete(_dataList[index]);
-  //                 },
-  //               );
-  //       },
-  //     ),
-  //   );
-  // }
 
   Widget _taskUncomplete(Todo data, int index) {
     return InkWell(
@@ -154,15 +225,18 @@ class TaskPageState extends State<TaskPage> {
                       ),
                       CustomButton(
                         buttonText: "Complete",
-                        onPressed: () {
+                        onPressed: () async {
                           // provider
                           //     .completeTodoEntries(data.id)
                           //     .whenComplete(() => Navigator.of(context).pop());
 
                           setState(() {
-                            todos[index].isFinish = true;
+                            todos[index].isFinish = true; //local update
                           });
-                          Navigator.of(context).pop();
+                          await updateTodo(todos[index].id, todos[index])
+                              .then((_) {
+                            Navigator.of(context).pop();
+                          }); //api call
                         },
                         color: Theme.of(context).accentColor,
                         textColor: Colors.white,
@@ -201,15 +275,13 @@ class TaskPageState extends State<TaskPage> {
                       ),
                       CustomButton(
                         buttonText: "Delete",
-                        onPressed: () {
+                        onPressed: () async {
                           // provider
                           //     .deleteTodoEntries(data.id)
                           //     .whenComplete(() => Navigator.of(context).pop());
-
-                          setState(() {
-                            todos.removeAt(index);
+                          await deleteTodo(todos[index].id).then((_) {
+                            Navigator.of(context).pop();
                           });
-                          Navigator.of(context).pop();
                         },
                         color: Theme.of(context).accentColor,
                         textColor: Colors.white,

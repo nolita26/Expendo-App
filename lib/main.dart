@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+
 import 'package:splashscreen/splashscreen.dart';
 import 'package:todoapp/pages/get_started.dart';
-// import './model/database.dart';
-import './pages/add_event_page.dart';
-import './pages/add_task_page.dart';
+
 import './pages/event_page.dart';
 import './pages/task_page.dart';
 import './widgets/custom_button.dart';
@@ -89,30 +87,6 @@ class _MyHomePageState extends State<MyHomePage> {
           _mainContent(context),
         ],
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   backgroundColor: Colors.deepPurple,
-      //   onPressed: () {
-      //     showDialog(
-      //         barrierDismissible: false,
-      //         context: context,
-      //         builder: (BuildContext context) {
-      //           return Dialog(
-      //               child: currentPage == 0 ? AddTaskPage() : AddEventPage(),
-      //               shape: RoundedRectangleBorder(
-      //                   borderRadius: BorderRadius.all(Radius.circular(12))));
-      //         });
-      //   },
-      //   child: Icon(Icons.add),
-      // ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      // bottomNavigationBar: BottomAppBar(
-      //   shape: CircularNotchedRectangle(),
-      //   child: Row(
-      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //     children: <Widget>[],
-      //   ),
-      // ),
-      // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 

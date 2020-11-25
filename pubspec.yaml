@@ -27,6 +27,7 @@ dependencies:
   moor_flutter: ^1.6.0
   provider: ^3.0.0+1
   splashscreen: ^1.2.0
+  http: ^0.12.2
 
 
 dev_dependencies:
