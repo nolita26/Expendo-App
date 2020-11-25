@@ -125,7 +125,7 @@ class _EventPageState extends State<EventPage> {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: Colors.orange,
         onPressed: () {
           _startAddNewEvent(context);
         },
@@ -146,9 +146,7 @@ class _EventPageState extends State<EventPage> {
                             'No events added yet!',
                             style: Theme.of(context).textTheme.headline6,
                           ),
-                          SizedBox(
-                            height: 20.0,
-                          ),
+                          SizedBox(height: 20.0),
                           Container(
                               height: constraints.maxHeight * 0.6,
                               child: Image.asset(
@@ -244,7 +242,7 @@ class _EventPageState extends State<EventPage> {
                   ? Icons.fiber_manual_record
                   : Icons.radio_button_unchecked,
               size: iconSize,
-              color: Colors.deepPurple),
+              color: Colors.orange),
         ));
   }
 }

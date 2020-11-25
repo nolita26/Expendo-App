@@ -227,6 +227,7 @@ class _ExpensesPageState extends State<ExpensesPage> {
                 ? Container()
                 : FloatingActionButton(
                     child: Icon(Icons.add),
+                    backgroundColor: Colors.orange,
                     onPressed: () => _startAddNewTransaction(context),
                   ),
             floatingActionButtonLocation:
