@@ -151,7 +151,7 @@ class TaskPageState extends State<TaskPage> {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: Colors.orange,
         onPressed: () {
           _startAddNewTask(context);
         },
@@ -169,7 +169,7 @@ class TaskPageState extends State<TaskPage> {
                       child: Column(
                         children: <Widget>[
                           Text(
-                            'No todos added yet!',
+                            'No tasks added yet!',
                             style: Theme.of(context).textTheme.headline6,
                           ),
                           SizedBox(

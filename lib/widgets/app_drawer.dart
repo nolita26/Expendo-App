@@ -8,26 +8,42 @@ class AppDrawer extends StatelessWidget {
       child: Column(
         children: <Widget>[
           AppBar(
-            title: Text('Tasks'),
+            title: Text('Welcome to Expendo!'),
+            backgroundColor: Colors.deepPurple,
             automaticallyImplyLeading: false,
+            toolbarHeight: 100,
           ),
           ListTile(
-            leading: Icon(Icons.payment),
-            title: Text('Expenses'),
+            leading: Icon(Icons.assignment),
+            title: Text('Tasks', style: TextStyle(fontSize: 16),),
             onTap: () {
               Navigator.of(context).pushNamed(ExpensesPage.routeName);
             },
           ),
           ListTile(
-            leading: Icon(Icons.edit),
-            title: Text('Other options'),
-            onTap: () {},
+            leading: Icon(Icons.date_range),
+            title: Text('Events', style: TextStyle(fontSize: 16),),
+            onTap: () {
+              Navigator.of(context).pushNamed(ExpensesPage.routeName);
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.attach_money),
+            title: Text('Expenses', style: TextStyle(fontSize: 16),),
+            onTap: () {
+              Navigator.of(context).pushNamed(ExpensesPage.routeName);
+            },
           ),
           ListTile(
             leading: Icon(Icons.settings),
-            title: Text('Settings'),
+            title: Text('Settings', style: TextStyle(fontSize: 16),),
             onTap: () {},
-          )
+          ),
+          ListTile(
+            leading: Icon(Icons.star),
+            title: Text('Rate Us!', style: TextStyle(fontSize: 16),),
+            onTap: () {},
+          ),
         ],
       ),
     );
